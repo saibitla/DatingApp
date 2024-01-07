@@ -39,7 +39,7 @@ public class AccountController : BaseAPIController
 
     return new UserDTO
     {
-        UserName = user.UserName,
+        Username = user.UserName,
         Token = _tokenService.CreateToken(user)
     };
 
@@ -61,7 +61,7 @@ public class AccountController : BaseAPIController
 
         return new UserDTO
     {
-        UserName = user.UserName,
+        Username = user.UserName,
         Token = _tokenService.CreateToken(user)
     };
 
