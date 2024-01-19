@@ -60,10 +60,10 @@ public class AccountController : BaseAPIController
         }
 
         return new UserDTO
-    {
-        Username = user.UserName,
-        Token = _tokenService.CreateToken(user)
-    };
+                    {
+                        Username = user.UserName,
+                        Token = _tokenService.CreateToken(user)
+                    };
 
 
 
