@@ -40,7 +40,8 @@ public class AccountController : BaseAPIController
     return new UserDTO
     {
         Username = user.UserName,
-        Token = _tokenService.CreateToken(user)
+        Token = _tokenService.CreateToken(user),
+        photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url
     };
 
     }
@@ -48,8 +49,9 @@ public class AccountController : BaseAPIController
     [HttpPost("login")]
     public async Task<ActionResult<UserDTO>> Login(LoginDTO loginDTO){
 
-        var user = await _context.Users.SingleOrDefaultAsync(x =>
-        x.UserName == loginDTO.UserName);
+        var user = await _context.Users
+        .Include(p => p.photos)
+        .SingleOrDefaultAsync(x => x.UserName == loginDTO.UserName);
 
         if(user == null) return Unauthorized("invalid username");
         using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -62,7 +64,8 @@ public class AccountController : BaseAPIController
         return new UserDTO
                     {
                         Username = user.UserName,
-                        Token = _tokenService.CreateToken(user)
+                        Token = _tokenService.CreateToken(user),
+                        photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url
                     };
 
 

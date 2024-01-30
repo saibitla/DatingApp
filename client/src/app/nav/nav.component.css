@@ -5,3 +5,9 @@
 .bg-primary{
     background-color: blueviolet;
 }
+
+img {
+    max-height: 50px;
+    border: 2px solid white;
+    display: inline;
+}
