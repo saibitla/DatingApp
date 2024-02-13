@@ -46,7 +46,8 @@ public class AccountController : BaseAPIController
         Username = user.UserName,
         Token = _tokenService.CreateToken(user),
         photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url,
-        knownAs = user.KnownAs
+        knownAs = user.KnownAs,
+        Gender = user.Gender
     };
 
     }
@@ -71,7 +72,8 @@ public class AccountController : BaseAPIController
                         Username = user.UserName,
                         Token = _tokenService.CreateToken(user),
                         photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url,
-                        knownAs = user.KnownAs
+                        knownAs = user.KnownAs,
+                        Gender = user.Gender
                     };
 
 
