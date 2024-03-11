@@ -46,7 +46,7 @@ public class AccountController : BaseAPIController
         if(!roleResult.Succeeded) return BadRequest(result.Errors);
     return new UserDTO
     {
-        Username = user.UserName,
+        userName = user.UserName,
         Token = await _tokenService.CreateToken(user),
         photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url,
         knownAs = user.KnownAs,
@@ -70,7 +70,7 @@ public class AccountController : BaseAPIController
 
         return new UserDTO
                     {
-                        Username = user.UserName,
+                        userName = user.UserName,
                         Token = await _tokenService.CreateToken(user),
                         photoUrl = user.photos.FirstOrDefault(x => x.IsMain)?.Url,
                         knownAs = user.KnownAs,

@@ -21,23 +21,28 @@ export class MemberEditComponent implements OnInit {
   }
 
   member : Member | undefined;
-  user : User | null = null;
-
+  user? : User;
   constructor(private accountService : AccountService, private memberService : MembersService,
     private toastr: ToastrService){
     this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: user => this.user = user
+      next: user => { if(user) this.user = user;
+                    console.log(JSON.stringify(this.user))
+      } 
     })
+    console.log('checking if coming');
   }
 
   ngOnInit(): void {
     this.loadMember();
+    
   }
 
   loadMember(){
     if(!this.user) return;
+    console.log(this.user.userName + 'testttttt');
     this.memberService.getMember(this.user.userName).subscribe({
-      next: member => this.member = member
+      next: member => { this.member = member;
+      console.log(this.member + 'TESTINGGGG');}
     })
   }
 

@@ -8,27 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 public class LikesController : BaseAPIController
 {
-    private readonly IUserRespository _userRespository;
-    private readonly ILikesRepository _likesRepository;
+    private readonly IUnitOfWork _uow;
 
-    public LikesController(IUserRespository userRespository, ILikesRepository likesRepository)
+    public LikesController(IUnitOfWork uow)
     {
-        _userRespository = userRespository;
-        _likesRepository = likesRepository;
+        _uow = uow;
     }
 
     [HttpPost("{username}")]
     public async Task<ActionResult> AddLike(string username)
     {
         var sourceUserId = User.GetUserId();
-        var likedUser = await _userRespository.GetUserByUserNameAsync(username);
-        var sourceUser = await _likesRepository.GetUserWithLikes(sourceUserId);
+        var likedUser = await _uow.UserRepository.GetUserByUserNameAsync(username);
+        var sourceUser = await _uow.LikesRepository.GetUserWithLikes(sourceUserId);
 
         if(likedUser == null) return NotFound();
 
         if(sourceUser.UserName == username) return BadRequest("you cannot like yourself");
 
-        var userLike = await _likesRepository.GetUserLike(sourceUserId, likedUser.Id);
+        var userLike = await _uow.LikesRepository.GetUserLike(sourceUserId, likedUser.Id);
 
         if(userLike != null) return BadRequest("you already like this user");
 
@@ -41,7 +39,7 @@ public class LikesController : BaseAPIController
 
         sourceUser.LikedUsers.Add(userLike);
 
-        if(await _userRespository.SaveAllAsync()) return Ok();
+        if(await _uow.Complete()) return Ok();
 
         return BadRequest("Failed to like user");
         
@@ -52,7 +50,7 @@ public class LikesController : BaseAPIController
 
         likesParams.UserId = User.GetUserId();
 
-        var users = await _likesRepository.GetUserLikes(likesParams );
+        var users = await _uow.LikesRepository.GetUserLikes(likesParams );
 
         Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage,
                 users.PageSize, users.TotalCount,users.TotalPages));

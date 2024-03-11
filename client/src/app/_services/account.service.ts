@@ -21,6 +21,7 @@ export class AccountService {
       map((response:User) => {
         const user = response;
         if(user){
+          console.log(JSON.stringify(user) + '@Account')
           this.setCurrentUser(user);
         }
       })
